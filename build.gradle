@@ -1,0 +1,41 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+}
+
+base {
+	archivesName = 'logger-config'
+}
+group 'net.ornithemc'
+version '1.0.0'
+
+sourceCompatibility = '8'
+targetCompatibility = '8'
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+publishing {
+    publications{
+        maven(MavenPublication) {
+            groupId = project.group
+            artifactId = project.archivesBaseName
+            version = project.version
+
+            artifact jar
+        }
+    }
+    repositories {
+		def ENV = System.getenv()
+        if (ENV.MAVEN_URL) {
+            maven {
+                url = ENV.MAVEN_URL
+                credentials {
+                    username = ENV.MAVEN_USERNAME
+                    password = ENV.MAVEN_PASSWORD
+                }
+            }
+        }
+    }
+}
